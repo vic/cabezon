@@ -13,7 +13,6 @@
         });
     };
 
-
     var initCanvas = function() {
         var paperW = 500;
         var paperH = 375;
@@ -22,10 +21,10 @@
         var bg = paper.image("img/rms.jpg", 0, 0, paperW, paperH);
 
         var curve = {
-            beg: { x:paperW / 3, y: paperH / 3 },
+            beg: { x:paperW / 2, y: paperH / 3 },
             c1: { x: paperW / 3 + 30, y: paperH / 3.5},
             c2: { x: paperW * 2/3 - 30, y: paperH / 3.5},
-            end: { x: paperW * 2/3, y: paperH / 3 }
+            end: { x: paperW / 2, y: paperH / 3 }
         };
 
         drawPoint(paper, curve.beg);
@@ -33,43 +32,44 @@
         drawPoint(paper, curve.c2);
         drawPoint(paper, curve.end);
 
-        var headPath = paper.
-           path(createPath(
-            ['M', curve.beg.x, curve.beg.y],
-            ['C', curve.c1.x, curve.c1.y, 
-                  curve.c2.x, curve.c2.y,
-                  curve.end.x, curve.end.y ]  
-           )).attr({ stroke: 'blue', "stroke-width": 5 });
-
-        var headCenter = {
-            x: paperW /2,
-            y: paperH / 3.5
+        var head = {
+           href: "img/rms-head.gif",
+           w: 132,
+           h: 185,
+           center: {
+                x: paperW /2,
+                y: paperH / 3.5
+           }
         };
 
-        drawPoint(paper, headCenter);
+        drawPoint(paper, head.center);
 
+        head.path = paper.path(createPath(
+            ['M', curve.beg.x, curve.beg.y],
+            ['C', curve.c1.x, curve.c1.y,
+                  curve.c2.x, curve.c2.y,
+                  curve.end.x, curve.end.y ]
+        )).attr({ stroke: 'blue', "stroke-width": 5 });
 
-        var head = paper.image("img/rms-head.gif", 
-                     headCenter.x - 132/2 , 
-                     headCenter.y - 185 / 2, 
-                    132, 185);
+        head.img = paper.image(head.href,
+            curve.beg.x - head.w / 2,
+            curve.beg.y - head.h / 2,
+            head.w, head.h
+        );
 
         var animTime = 500;
 
         var forward = function() {
-            head.animate({
-                    rotation: '45' 
-            }, animTime, backward);
+            head.img.animateAlong(head.path, animTime).
+            animate({ rotation: '45' }, animTime, backward);
         };
 
         var backward = function() {
-           head.animate({
-            rotation: '-45' 
-           }, animTime, forward); 
+            head.img.animateAlongBack(head.path, animTime).
+            animate({ rotation: '-45' }, animTime, forward);
         };
 
         forward();
-
 
     };
 
