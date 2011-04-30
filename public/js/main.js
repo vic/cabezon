@@ -41,27 +41,35 @@
                   curve.end.x, curve.end.y ]  
            )).attr({ stroke: 'blue', "stroke-width": 5 });
 
+        var headCenter = {
+            x: paperW /2,
+            y: paperH / 3.5
+        };
+
+        drawPoint(paper, headCenter);
+
 
         var head = paper.image("img/rms-head.gif", 
-                     curve.beg.x - 132/2 , 
-                     curve.beg.y - 185 / 2, 
+                     headCenter.x - 132/2 , 
+                     headCenter.y - 185 / 2, 
                     132, 185);
 
         var animTime = 500;
 
-        var goForward = function() {
-          head.animateAlong(headPath, animTime, false, function(){
-            goBackward(); 
-          });
+        var forward = function() {
+            head.animate({
+                    rotation: '45' 
+            }, animTime, backward);
         };
 
-        var goBackward = function() {
-          head.animateAlongBack(headPath, animTime, false, function(){
-            goForward(); 
-          });
+        var backward = function() {
+           head.animate({
+            rotation: '-45' 
+           }, animTime, forward); 
         };
 
-        goForward();
+        forward();
+
 
     };
 
